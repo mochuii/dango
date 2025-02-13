@@ -3,91 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will You Be My Valentine? 💕</title>
+    <title>Be My Valentine? 💖</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background: linear-gradient(135deg, #ffdde1, #bee3f8);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
+            color: #333;
+            padding: 20px;
         }
         .container {
+            max-width: 500px;
+            margin: auto;
             background: white;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .button {
+        h1 {
+            color: #ff6b81;
+        }
+        .btn {
             display: inline-block;
             margin: 10px;
             padding: 10px 20px;
             font-size: 18px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: #ff6b81;
+            color: white;
         }
-        .button:hover {
-            transform: scale(1.1);
+        .btn:hover {
+            background: #ff4757;
         }
-        .yes { background: #ff9aa2; }
-        .no { background: #a2d5f2; }
+        .btn-outline {
+            position: relative;
+            border: 2px solid transparent;
+            animation: outlineGlow 1.5s infinite alternate;
+        }
+        @keyframes outlineGlow {
+            0% { border-color: rgba(255, 107, 129, 0.5); }
+            100% { border-color: rgba(255, 107, 129, 1); }
+        }
         .hidden { display: none; }
-        .pulsate { animation: pulse 1.5s infinite alternate; }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
     </style>
 </head>
 <body>
     <div class="container" id="question">
-        <h2>Will you be my Valentine? 💖 (Feb 15)</h2>
-        <button class="button yes pulsate" onclick="showOptions()">Yes 😊</button>
-        <button class="button no" onclick="showSadFace()">No 😢</button>
-    </div>
-    
-    <div class="container hidden" id="options">
-        <h2>Yay! 🎉 What should we do?</h2>
-        <button class="button pulsate" onclick="showTimeOptions('A&G', ['12NN', '1PM', '2PM', '3PM'])">Go to A&G 🍕</button>
-        <button class="button pulsate" onclick="showTimeOptions('Q Coffee or the Cafe with Cats', ['3PM', '4PM', '5PM', '6PM'])">Eat at Q Coffee or the Cafe with Cats ☕🐱</button>
-        <button class="button pulsate" onclick="showTimeOptions('Watch Captain America & Eat at Expresso', ['11:00 AM', '11:15 AM', '11:30 AM', '1:45 PM', '4:30 PM', '4:45 PM', '5:00 PM', '7:15 PM'])">Watch Captain America & Eat at Expresso 🎬🍔</button>
+        <h1>Will you be my Valentine? 💖 (Feb 15)</h1>
+        <button class="btn btn-outline" onclick="showChoices()">Yes 💕</button>
+        <button class="btn" onclick="showSad()">No 😢</button>
     </div>
 
-    <div class="container hidden" id="timeOptions"></div>
-    <div class="container hidden" id="summary"></div>
-    
-    <div class="container hidden" id="sadFace">
+    <div class="container hidden" id="choices">
+        <h2>Yay! What shall we do? 😊</h2>
+        <button class="btn btn-outline" onclick="showTime('A&G')">Go to A&G</button>
+        <button class="btn btn-outline" onclick="showTime('Q Coffee')">Eat at Q Coffee or Cat Café</button>
+        <button class="btn btn-outline" onclick="showTime('Movie')">Watch Captain America + Eat at Expresso</button>
+    </div>
+
+    <div class="container hidden" id="time">
+        <h2 id="time-question"></h2>
+        <div id="time-options"></div>
+    </div>
+
+    <div class="container hidden" id="summary">
+        <h2>See uuuu! 💕</h2>
+        <p id="final-choice"></p>
+    </div>
+
+    <div class="container hidden" id="sad">
         <h2>:(</h2>
     </div>
-    
+
     <script>
-        function showOptions() {
-            document.getElementById('question').classList.add('hidden');
-            document.getElementById('options').classList.remove('hidden');
+        function showChoices() {
+            document.getElementById("question").classList.add("hidden");
+            document.getElementById("choices").classList.remove("hidden");
         }
-        function showSadFace() {
-            document.getElementById('question').classList.add('hidden');
-            document.getElementById('sadFace').classList.remove('hidden');
+        
+        function showSad() {
+            document.getElementById("question").classList.add("hidden");
+            document.getElementById("sad").classList.remove("hidden");
         }
-        function showTimeOptions(activity, times) {
-            document.getElementById('options').classList.add('hidden');
-            let timeDiv = document.getElementById('timeOptions');
-            timeDiv.innerHTML = `<h2>What time for ${activity}? ⏰</h2>`;
-            times.forEach(time => {
-                timeDiv.innerHTML += `<button class='button' onclick='showSummary("${activity}", "${time}")'>${time}</button>`;
+        
+        function showTime(activity) {
+            document.getElementById("choices").classList.add("hidden");
+            document.getElementById("time").classList.remove("hidden");
+            
+            let timeOptions = "";
+            if (activity === "A&G") {
+                document.getElementById("time-question").innerText = "What time shall we go to A&G?";
+                timeOptions = ["12NN", "1PM", "2PM", "3PM"];
+            } else if (activity === "Q Coffee") {
+                document.getElementById("time-question").innerText = "What time shall we eat?";
+                timeOptions = ["3PM", "4PM", "5PM", "6PM"];
+            } else if (activity === "Movie") {
+                document.getElementById("time-question").innerText = "What time shall we watch the movie?";
+                timeOptions = ["11:00 AM", "11:15 AM", "11:30 AM", "1:45 PM", "4:30 PM", "4:45 PM", "5:00 PM", "7:15 PM"];
+            }
+            
+            let buttons = "";
+            timeOptions.forEach(time => {
+                buttons += `<button class='btn btn-outline' onclick='showSummary("${activity}", "${time}")'>${time}</button>`;
             });
-            timeDiv.classList.remove('hidden');
+            document.getElementById("time-options").innerHTML = buttons;
         }
+        
         function showSummary(activity, time) {
-            document.getElementById('timeOptions').classList.add('hidden');
-            let summaryDiv = document.getElementById('summary');
-            summaryDiv.innerHTML = `<h2>Yay! We're going to ${activity} at ${time}! 🎉</h2><p>See uuuu! 💕</p>`;
-            summaryDiv.classList.remove('hidden');
+            document.getElementById("time").classList.add("hidden");
+            document.getElementById("summary").classList.remove("hidden");
+            document.getElementById("final-choice").innerText = `We're going to ${activity} at ${time}! 🎉`;
         }
     </script>
 </body>
